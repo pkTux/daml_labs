@@ -1,0 +1,24 @@
+module TypeTest where
+import Daml.Script
+
+class ReachOut i o where
+    reachOut: i -> o
+
+data Person = Person with
+    name: Text
+    email: Text
+      deriving (Eq, Show, Ord)
+
+instance ReachOut Person Text where
+    reachOut p = "Hello " <> p.name <> " at " <> p.email
+
+testReachable : Script ()
+testReachable = script do
+    let
+        myFriend = Person with 
+            name = "Alice"
+            email = "alice@earth.com"
+
+        message: Text =  reachOut myFriend
+
+    debug $ message

@@ -1,0 +1,44 @@
+module TriangleArea where
+import Daml.Script
+import DA.List as List
+import DA.Math (sqrt)
+-- DONT over index yoru lists
+isValidTriangle : [Decimal] -> Bool
+isValidTriangle t = (t !! 0) + (t !! 1) > (t !! 2) && (t !! 1) + (t !! 0) > (t !! 2) && (t !! 2) + (t !! 1) > (t !! 0)
+ 
+hasThreeSides : [Decimal] -> Bool
+hasThreeSides sides = length sides == 3
+
+-- Guard to ensure no side has a length of zero
+noZeroSide : [Decimal] -> Bool
+noZeroSide sides = 0.0 `notElem` sides
+
+triangleTrue : [Decimal] -> Decimal
+triangleTrue sides =
+    let
+        a = sides !! 0
+        b = sides !! 1
+        c = sides !! 2
+        s = (a + b + c) / 2.0
+        in sqrt (s * (s - a) * (s - b) * (s - c))
+
+triangleArea : [Decimal] -> Either Text Decimal
+triangleArea sides = case sides of
+    [a, b, c] | hasThreeSides sides && noZeroSide sides  && isValidTriangle sides->
+        let
+            s = (sum sides) / 2.0
+        in return $ sqrt (s * (s - a) * (s - b) * (s - c))
+    _ -> if not (hasThreeSides sides) then Left "Error: not enough sides"
+         else if not (noZeroSide sides) then Left "Error: side with zero"
+         else  if not (isValidTriangle sides) then Left "Error side math bad(too short)"
+         else Left "other Failure"
+ 
+testTriangle : Script ()
+testTriangle = script do 
+    debug $ triangleArea [4.0, 2.0, 5.0]
+    debug $ triangleArea [1.0, 2.0, 3.0]
+    debug $ triangleArea [1.0, 2.0]
+    debug $ triangleArea [1.0, 2.0, 0.0]
+
+    return ()
+    

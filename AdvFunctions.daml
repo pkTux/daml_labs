@@ -1,0 +1,9 @@
+module AdvFunctions where
+import Daml.Script
+
+increment n = n + 1  
+
+
+testAdvFunctions : Script ()
+testAdvFunctions = script do
+    debug $ increment 1

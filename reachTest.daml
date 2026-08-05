@@ -1,0 +1,16 @@
+
+
+testTypetest : Script ()
+testTypetest = script do
+    let
+        person1 = Person with 
+            name = "Alice"
+            email = "alice@earth.com"
+    
+        person2 = Person with 
+            name = "Bob"
+            email = "bob@earth.com"
+
+    debug person1  -- section 1
+    debug $ person1 == person2
+    debug $ person1 < person2

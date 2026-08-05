@@ -1,0 +1,15 @@
+module Functions2 where
+import Daml.Script
+
+increment n = n + 1
+
+add x y = x + y
+
+multiply x y = x * y
+
+testFunctions2 : Script ()
+testFunctions2 = script do
+    debug $ increment 5
+    debug ( increment 4)
+    debug $ add 3 3
+    debug $ multiply 3 6

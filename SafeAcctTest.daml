@@ -1,0 +1,42 @@
+module SafeAcctTest where
+import Daml.Script
+
+data Account = Account with
+    ownerId: Text
+    balance: Decimal
+
+class SafeAccount account id balance where
+    safeQuery: account -> id-> balance
+
+-- instancing the type class with 2 required variabls & a forked response 
+instance SafeAccount Account Text (Optional Decimal) where
+    safeQuery account id = if (id == account.ownerId) then Some account.balance else None
+
+testSafeAccount : Script ()
+testSafeAccount = script do 
+
+    let myAccount = Account with 
+            ownerId = "123"
+            balance = 100.00
+
+        myBalance1: Optional Decimal = safeQuery myAccount "123"
+
+    debug $ myBalance1
+
+    let myBalance2: Optional Decimal = safeQuery myAccount "234"
+
+    debug $ myBalance2
+
+    let myAccount2 = Account with 
+            ownerId = "144"
+            balance = 95.00
+
+        myBalance3: Optional Decimal = safeQuery myAccount2 "123"
+
+    debug $ myBalance3
+
+    let myBalance4: Optional Decimal = safeQuery myAccount2 "144"
+
+    debug $ myBalance4
+
+    return ()

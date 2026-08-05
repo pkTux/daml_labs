@@ -1,0 +1,16 @@
+module MapFunction where
+import Daml.Script
+import DA.Map as Map
+
+mapTest : Script ()
+mapTest = script do
+    let 
+        wordMap: Map Text Text
+        wordMap: Map.empty
+
+    let
+        words = [("a", "apple"), ("b", "banana"), ("c", "cherry")]
+        wordMap = Map.fromList words
+
+    debug $ <> show wordMap
+    

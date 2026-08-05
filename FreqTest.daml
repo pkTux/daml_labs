@@ -1,0 +1,55 @@
+module FreqTest where
+import Daml.Script
+import DA.Tuple
+import DA.List as List
+import DA.Map as Map
+import DA.Text as Text
+import DA.Numeric
+import DA.Optional (fromSome)
+import DA.Foldable (foldr)
+
+termFrequency : Text -> Text -> Decimal
+termFrequency term text =
+    let
+        words = Text.splitOn " " text
+        termCount = intToDecimal (List.length (List.filter (== term) words))
+        totalCount = intToDecimal (List.length words)
+    in if totalCount == intToDecimal 0 then 0.0 else termCount / totalCount
+
+multiTermFrequency : [Text] -> Text -> [Decimal]
+multiTermFrequency blob textie = 
+    map (\nan -> termFrequency textie nan) blob
+
+multiTermFrequencyb : [Text] -> Text -> [Decimal]
+multiTermFrequencyb blob textie = 
+    DA.Foldable.foldr (\nan acc -> termFrequency textie nan :: acc) [] blob
+
+testFreq : Script ()
+testFreq = script do
+    let
+        wordOne = "long"
+        wordsOne = "a long long way to run"
+        wordsTwo = Text.splitOn " " wordsOne
+        wordsList = Text.words wordsOne
+        termCount = intToDecimal (List.length (List.filter (== wordOne) wordsTwo))
+        totalCount = intToDecimal (List.length wordsTwo)
+        compFreq = termFrequency wordOne wordsOne
+    debug $ termFrequency "long" "a long long way to run"
+
+    let xxx = "hello"
+    let yyy = [ "hello from the other side I must have called a thousand times", 
+            "You say goodbye and I say hello hello hello",
+            "hello is it me you’re looking for",
+            "hello hello is anyone home"
+            ]
+
+
+    debug $ show (yyy !! 0)
+    debug $ termFrequency xxx (yyy !! 0)
+    debug $ "version1 inline: " 
+    debug $ map (\nan -> termFrequency xxx nan) yyy
+    debug $ "version2 map: "
+    debug $ multiTermFrequency yyy xxx
+    debug $ "version3 foldr: "
+    debug $ multiTermFrequencyb yyy xxx    
+    return()

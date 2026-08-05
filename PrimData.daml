@@ -1,0 +1,38 @@
+module PrimData where
+import Daml.Script
+import DA.Date
+import DA.Time
+import DA.List
+import DA.Tuple
+import DA.Set as Set
+
+
+testPrimData : Script ()
+testPrimData = script do
+   let
+           today = date 2025 Jan 1
+        intList = [1,2,4]
+        rangeList = [10..20]
+        shoesList = ["nike", "adidas", "puma"]
+        pantsList = ["jeans", "shorts", "trousers"]
+        clothsList = shoesList <> pantsList
+        twoTuple= ("hello", 1)
+        threeTuple = ("hello", 1, True)
+        nTuple = ("hello", 1, True, [3,1])
+        fruitSet: Set Text
+        fruitSet = Set.empty 
+    let fruitList ["apple", "banana", "orange"]
+    let fruitSet = Set.fromList fruitList 
+
+   debug $ "dob" <> show today
+   debug $ "length:" <> show (length rangeList)
+   debug $ "time:" <> show (head intList)
+   debug $ "age:" <> show (tail shoesList)
+   debug $ "elem:" <> show (elem "nike" shoesList   )
+   debug $ "cloths:" <> show clothsList
+   debug $ "prepend:" <> show ("mango"  :: shoesList)
+   debug $ "twoTuple:" <> show twoTuple
+   debug $ "threeTuple:" <> show threeTuple
+   debug $ "nTuple:" <> show nTuple
+   debug $ "fruitSet:" <> show fruitSet
+   pure ()

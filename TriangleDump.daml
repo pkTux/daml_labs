@@ -1,0 +1,22 @@
+module TriangleDump where
+import Daml.Script
+import DA.List
+
+isValidFunc : Text -> Text
+isValidFunc term = term <> " help"
+
+isValidTri: [Decimal] -> Bool
+isValidTri sides = (sides !! 0) + (sides !! 1) > (sides !! 2) && (sides !! 0) + (sides !! 2) > (sides !! 1) && (sides !! 2) + (sides !! 1) > (sides !! 0)
+ --   let
+   --     aA = sides !! 0
+   --     bB = sides !! 1
+--   cC = sides !! 2
+   -- in
+   --     if aA + bB > cC && aA + cC > bB && bB + cC > aA then "a works"
+   --     else "fail"
+
+testTriangleDump : Script ()
+testTriangleDump = script do
+    debug $ isValidFunc "gorp"
+    debug $ isValidTri [1.0, 2.0, 3.0]
+    debug $ isValidTri [4.0, 5.0, 3.0]

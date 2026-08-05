@@ -1,0 +1,41 @@
+module TypeTesting where
+import Daml.Script
+
+--myTotalRedeemedPoints : Int -> Int
+--myTotalRedeemedPoints var = var * 5
+
+
+
+class Redeemable i o where
+    redeem : i -> o
+
+data AirtravelPoint = AirtravelPoint with
+    count: Int
+
+
+data DiningPoint = DiningPoint with
+    count: Int
+
+instance Redeemable AirtravelPoint Decimal where
+    redeem points = intToDecimal points.count * 10.00
+
+instance Redeemable DiningPoint Decimal where
+    redeem points = intToDecimal points.count * 5.00
+
+--redeemPoints: (Redeemable a b) => a -> b
+--redeemPoints points = redeem points
+
+testRedeemable : Script ()
+testRedeemable = script do 
+    let myTravelPoints = AirtravelPoint with 
+            count = 500
+
+        myDiningPoints = DiningPoint with 
+            count = 5000
+   --    
+        myTotalRedeemedPoints: Decimal = redeem myTravelPoints + redeem myDiningPoints
+
+    debug myTotalRedeemedPoints
+  --  debug $ redeem myTravelPoints
+ --   debug $ redeem myDiningPoints
+    return()

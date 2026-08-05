@@ -1,0 +1,38 @@
+module ConditionalTest where
+import Daml.Script
+import DA.List.Total ((!!))
+
+-- if then else 88 always needs an else clause, otherwise it will not compile
+-- guards use Pipe
+
+ifOddOrEven : Int -> Text
+ifOddOrEven x =
+    if (x % 2 == 0) then "even"
+    else "odd"
+
+findBmi: Decimal -> Decimal -> Text
+findBmi weight height
+    | bmi <= 18.5 = "underweight"
+    | bmi <= 24.9 = "normal weight"
+    | bmi <= 29.9 = "overweight"
+    | otherwise = "obese"
+    where bmi = weight / (height * height)
+
+caseOddorEven : Int -> Text
+caseOddorEven x = case (x % 2) of
+    0 -> "even"
+    1 -> "odd"
+    _ -> "error"
+
+someFunction : Int -> Either Text Int
+someFunction x =
+    if x > 0 then Right x
+    else Left "Negative number"
+
+testConditional : Script ()
+testConditional = script do
+    debug $ ifOddOrEven 3
+    debug $ caseOddorEven 3
+    debug $ findBmi 138.34 1.803
+    debug $ someFunction 5
+    debug $ someFunction (-3)
